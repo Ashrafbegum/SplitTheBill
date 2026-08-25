@@ -195,6 +195,11 @@ input::placeholder {
   color: #7250bb;
 }
 
+.avatar-red {
+  background:#7250bb; 
+  color:  #e44405;
+}
+
 .chip-x {
   color: #a0a2ae;
   font-size: 16px;
