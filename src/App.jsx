@@ -1,11 +1,18 @@
 import React, { useState } from "react";
-import { useState } from "react";
 
-const people = [
-  { name: "Alex", initial: "A", tone: "blue" },
-  { name: "Jordan", initial: "J", tone: "yellow" },
-  { name: "Taylor", initial: "T", tone: "purple" },
+const tones = ["blue", "yellow", "purple", "red"]; 
+const getTone = () => {
+  const randomIndex = Math.floor(Math.random() * tones.length);
+  return tones[randomIndex];
+}
+
+const initialPeople = [
+  { id: crypto.randomUUID(), name: "Saqib", initial: "S", tone: getTone() },
+  { id: crypto.randomUUID(), name: "Sidrah", initial: "S", tone: getTone() },
+  { id: crypto.randomUUID(), name: "Hasnain", initial: "H", tone: getTone() },
 ];
+
+console.log(initialPeople);
 
 const expenses = [
   { initial: "D", title: "Dinner at Sora", paidBy: "Alex", amount: "$84.00" },
@@ -52,9 +59,33 @@ function BalanceCard({ name, amount, status, positive }) {
 
 export default function App() {
 
-const [people, setPeople] = useState(["Saqib", "Sidrah", "Hasnain", "Mahera"]);
-const [nameInput, setNameInput] = useState("");
-  return (
+const [people, setPeople] = useState(initialPeople);
+const [personName, setPersonName] = useState("");
+
+const addPerson = () => {
+  const name = personName.trim();
+  if(!name)
+    return;
+
+  const personExist = people.some(
+    (person) => person.name.toLowerCase() === name.toLowerCase() 
+  );
+
+  if(personExist)
+    return;
+
+  const newPerson = {
+    id: crypto.randomUUID(),
+    name,
+    initial: name.charAt([0]).toUpperCase(),
+    tone: "blue"
+  }
+
+  setPeople([...people, newPerson]);
+  setPersonName("");
+}
+
+return (
     <main className="page">
       <div className="shell">
         <header className="hero">
@@ -66,7 +97,7 @@ const [nameInput, setNameInput] = useState("");
 
           <div className="trip-summary">
             <span>WEEKEND IN AUSTIN</span>
-            <strong><b>3 people</b> / 3 expenses</strong>
+            <strong><b>{people.length} people</b> / 3 expenses</strong>
           </div>
         </header>
 
@@ -76,8 +107,10 @@ const [nameInput, setNameInput] = useState("");
             <h2>Add people</h2>
 
             <div className="people-form">
-              <input aria-label="Enter a name" placeholder="Enter a name" />
-              <button type="button">Add Person</button>
+              <input aria-label="Enter a name" placeholder="Enter a name" 
+                  value={personName}
+                  onChange={(e) => setPersonName(e.target.value)}/>
+              <button type="button" onClick={addPerson}>Add Person</button>
             </div>
 
             <div className="chips">
